@@ -31,7 +31,7 @@ jobs:
             git config user.email "$AUTHOR_EMAIL"
 
             NEW_COMMIT_MSG="[update main] => ${{ env.message }}"
-            git commit --amend -m "$NEW_COMMIT_MSG"
+            git commit "$NEW_COMMIT_MSG"
             git push --force-with-lease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
