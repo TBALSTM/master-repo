@@ -32,4 +32,6 @@ jobs:
 
             NEW_COMMIT_MSG="[update main] => ${{ env.message }}"
             git commit --amend -m "$NEW_COMMIT_MSG"
-            git push
+            git push --force-with-lease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
