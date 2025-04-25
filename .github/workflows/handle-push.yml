@@ -19,10 +19,10 @@ jobs:
         id: last_commit
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B)
-          echo "message=$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "message=$COMMIT_MSG" >> $GITHUB_ENV
 
       - name: Amend commit message with [update main] (check if prefix is missing)
-        if: startsWith(steps.last_commit.outputs.message, '[update main] => ') == false
+        if: startsWith(env.message, '[update main]') == false
         run: |
             AUTHOR_NAME=$(git log -1 --pretty=format:'%an')
             AUTHOR_EMAIL=$(git log -1 --pretty=format:'%ae')
@@ -30,6 +30,6 @@ jobs:
             git config user.name "$AUTHOR_NAME"
             git config user.email "$AUTHOR_EMAIL"
 
-            NEW_COMMIT_MSG="[update main] => ${steps.last_commit.outputs.message}"
+            NEW_COMMIT_MSG="[update main] => ${{ env.message }}"
             git commit --amend -m "$NEW_COMMIT_MSG"
             git push --force-with-lease origin main
