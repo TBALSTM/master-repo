@@ -30,6 +30,6 @@ jobs:
             git config user.name "$AUTHOR_NAME"
             git config user.email "$AUTHOR_EMAIL"
 
-            NEW_COMMIT_MSG="[update main] => $COMMIT_MSG"
+            NEW_COMMIT_MSG="[update main] => ${steps.last_commit.outputs.message}"
             git commit --amend -m "$NEW_COMMIT_MSG"
             git push --force-with-lease origin main
