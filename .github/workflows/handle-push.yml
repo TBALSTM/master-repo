@@ -23,6 +23,8 @@ jobs:
 
       - name: Amend commit message with [update main]
         run: |
-            COMMIT_MSG="[update main] => $(git log -1 --pretty=%B)"
-            git commit --amend -m "$COMMIT_MSG"
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+            TRUE_COMMIT_MSG=$(echo "$COMMIT_MSG" | sed 's/\[update main\] => //g')
+            FINAL_COMMIT_MSG="[update main] => $TRUE_COMMIT_MSG"
+            git commit --amend -m "$FINAL_COMMIT_MSG"
             git push --force-with-lease origin main
