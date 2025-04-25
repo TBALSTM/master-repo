@@ -18,7 +18,7 @@ jobs:
       - name: Get last commit message
         id: last_commit
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_MSG=$(git log origin/main -1 --pretty=%B | tr '\n' ' ')
           echo "message=$COMMIT_MSG" >> $GITHUB_OUTPUT
 
       - name: Amend commit message with [update main] (check if prefix is missing)
