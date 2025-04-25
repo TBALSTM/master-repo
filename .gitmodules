@@ -1,0 +1,6 @@
+[submodule "models/child1"]
+	path = models/child1
+	url = https://github.com/Thomas9-Company/child1-repo.git
+[submodule "models/child2"]
+	path = models/child2
+	url = https://github.com/Thomas9-Company/child1-repo.git
