@@ -1,0 +1,29 @@
+name: Prefix main commits
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  prefix-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get last commit message
+        id: last_commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "message=$COMMIT_MSG" >> $GITHUB_OUTPUT
+
+      - name: Amend commit message with [update main] (check if prefix is missing)
+        if: startsWith(steps.last_commit.outputs.message, '[update main] => ') == false
+        run: |
+            NEW_COMMIT_MSG="[update main] => $COMMIT_MSG"
+            git commit --amend -m "$COMMIT_MSG"
+            echo "New commit message: $COMMIT_MSG"
