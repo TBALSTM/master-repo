@@ -15,6 +15,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check for submodule changes
+        run: |
+          git pull --recurse-submodules
+          git submodule update --init --recursive
+
       - name: Get last commit message
         id: last_commit
         run: |
