@@ -16,7 +16,6 @@ jobs:
           fetch-depth: 0
 
       - name: Get last commit message
-        id: last_commit
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B)
           echo "message=$COMMIT_MSG" >> $GITHUB_ENV
@@ -32,6 +31,6 @@ jobs:
 
             NEW_COMMIT_MSG="[update main] => ${{ env.message }}"
             git commit --amend -m "$NEW_COMMIT_MSG" --no-edit
-            git push --force-with-lease
+            git push --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
