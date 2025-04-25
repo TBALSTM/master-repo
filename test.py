@@ -11,4 +11,3 @@ def test_multiply_by_B():
 
 if __name__ == "__main__":
     test_multiply_by_B()
-    print(hello_world())
