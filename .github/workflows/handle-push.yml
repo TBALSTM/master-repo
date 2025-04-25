@@ -31,5 +31,5 @@ jobs:
             git config user.email "$AUTHOR_EMAIL"
 
             NEW_COMMIT_MSG="[update main] => $COMMIT_MSG"
-            git commit --amend -m "$COMMIT_MSG"
-            echo "New commit message: $COMMIT_MSG"
+            git commit --amend -m "$NEW_COMMIT_MSG"
+            echo "New commit message: $NEW_COMMIT_MSG"
