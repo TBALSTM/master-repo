@@ -1,0 +1,46 @@
+#!/bin/bash
+# commit-msg hook: automatically prefix commit messages based on submodule changes
+# and log the actions into commit-msg.log
+
+COMMIT_MSG_FILE="$1"
+SUBMODULE_PATHS=$(git config --file .gitmodules --get-regexp path | awk '{ print $2 }')
+
+MASTER_CHANGED=false
+CHILDREN_CHANGED=()
+
+CHANGED_CONTENT=$(git diff --cached --name-only)
+
+if [ -z "$CHANGED_CONTENT" ]; then
+    exit 0
+fi
+
+for submodule in $SUBMODULE_PATHS; do
+    submodule_name=$(echo "$submodule" | sed 's/^models\///')
+
+    if echo "$CHANGED_CONTENT" | grep -q "^${submodule}\$"; then
+        CHILDREN_CHANGED+=("$submodule_name")
+    fi
+done
+
+MASTER_CHANGED_FILES=$(echo "$CHANGED_CONTENT" | grep -vE "^($(echo ${SUBMODULE_PATHS[@]} | sed 's/ /|/g'))$")
+
+if [ -n "$MASTER_CHANGED_FILES" ]; then
+    MASTER_CHANGED=true
+fi
+
+PREFIX=""
+if [ "$MASTER_CHANGED" = true ]; then
+    PREFIX="[Update master]:"
+elif [ ${#CHILDREN_CHANGED[@]} -gt 0 ]; then
+    joined_children=$(IFS='|' ; echo "${CHILDREN_CHANGED[*]}")
+    PREFIX="[Update $joined_children]:"
+else
+    exit 0
+fi
+
+if [ -n "$PREFIX" ]; then
+    COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+    if [[ "$COMMIT_MSG" != "$PREFIX"* ]]; then
+        echo -e "$PREFIX $COMMIT_MSG" > "$COMMIT_MSG_FILE"    
+    fi
+fi
